@@ -1,0 +1,1 @@
+#modelo de banco para requests, eu sei q tem mais, to com preguica agr

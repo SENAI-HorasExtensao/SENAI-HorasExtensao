@@ -1,0 +1,1 @@
+#dependendencia, eu uso pra bloquear rota. e accessar o db tbm q usa Depends
