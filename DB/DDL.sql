@@ -29,19 +29,12 @@ create table turma(
     nome varchar(50) not null
 );
 
-create table tipo_usuario(
-	id integer unsigned primary key auto_increment not null,
-	valor varchar(100) not null
-);
-
 # Conteúdo geral do usuário
 # Não deve possuir tipo de usuário nesta tabela
 # Cada tipo de usuário deve ter sua própria tabela e referenciar esta
 create table usuario(
 	#identificação em uuid pela quantidade de pessoas possíveis a longo prazo
 	id char(36) primary key default (UUID()),
-    id_tipo_usuario int not null,
-		foreign key (id_tipo_usuario) references tipo_usuario(id),
     nome varchar(255) not null, #Obrigatório
     email varchar(255) not null unique, #Obrigatório
     telefone char(11) null unique, # Talvez não
@@ -49,6 +42,26 @@ create table usuario(
     # Campos com largo espaço para criptografia
     cpf varchar(255) not null unique, # Obrigatório
     senha varchar(255) not null # Obrigatório
+);
+
+create table administrador(
+	id_usuario char(36) unique not null, 
+    foreign key (id_usuario) references usuario(id)
+);
+
+create table docente(
+	id_usuario char(36) unique not null, 
+    foreign key (id_usuario) references usuario(id)
+    
+    # Talvez adicionar turmas ao docente. TALVEZ!
+);
+
+create table aluno(
+	id_usuario char(36) unique not null, 
+    foreign key (id_usuario) references usuario(id),
+    
+    id_turma char(36) unique not null, 
+    foreign key (id_turma) references turma(id)
 );
 
 create table projeto(
