@@ -1,19 +1,15 @@
 from fastapi import APIRouter
+from app.connection import get_db_connection
 
-router = APIRouter(prefix="/admin", tags=["admin"])
+router = APIRouter(prefix="/admin", tags=["Administração"])
 
-@router.get("/students", tags=["admin"])
-async def get_students():
-    return {"students": "students"}
-
-@router.get("/students/{id}", tags=["admin"])
-async def get_students_by_id(id:int):
-    return {"students": id}
-
-@router.get("/stats", tags=["admin"])
-async def get_stats():
-    return {"requests": "requests"}
-
-@router.patch("/request/{id}", tags=["admin"])
-async def update_status(id:int):
-    return {"requests": "status"}
+@router.get("/relatorios")
+def get_reports():
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+    try:
+        cursor.execute("SELECT count(*) as total FROM horas_extensao")
+        return cursor.fetchone()
+    finally:
+        cursor.close()
+        db.close()

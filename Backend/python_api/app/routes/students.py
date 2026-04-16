@@ -1,19 +1,15 @@
 from fastapi import APIRouter
+from app.connection import get_db_connection
 
-router = APIRouter(prefix="/students", tags=["students"])
+router = APIRouter(prefix="/students", tags=["Alunos"])
 
-@router.post("/request")
-async def post_request():
-    return {"request": "request"}
-
-@router.get("/request")
-async def get_all_requests(id:int):
-    return {"request": id}
-
-@router.get("/request/{id}")
-async def get_request_by_idt(id:int):
-    return {"request": id}
-
-@router.get("/hours")
-async def get_hours():
-    return {"requests": "status"}
+@router.get("/")
+def get_students():
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+    try:
+        cursor.execute("SELECT * FROM alunos")
+        return cursor.fetchall()
+    finally:
+        cursor.close()
+        db.close()
