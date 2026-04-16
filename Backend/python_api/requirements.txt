@@ -1,5 +1,8 @@
-fastapi~=0.135.3
-sqlalchemy
+fastapi
 uvicorn
-psycopg2-binary
-python-dotenv
+sqlalchemy
+pydantic
+pydantic-settings
+python-multipart
+pymysql
+cryptography

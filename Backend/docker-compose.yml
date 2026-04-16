@@ -5,7 +5,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: senai-horas-extensao
+      MYSQL_DATABASE: SENAI_HORAS_EXTENSAO
       MYSQL_USER: root_db
       MYSQL_PASSWORD: root
     ports:
@@ -15,7 +15,7 @@ services:
     networks:
       - app_network
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -25,7 +25,9 @@ services:
     build: ./python_api
     container_name: python_api
     ports:
-      - "5000:5000"
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=mysql+pymysql://root_db:root@mysql_db:3306/SENAI_HORAS_EXTENSAO
     volumes:
       - ./python_api:/app
     depends_on:
