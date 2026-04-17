@@ -1,4 +1,4 @@
 from . import auth
 from . import admin
-from . import students
-from . import professors
+from . import aluno
+from . import docente
