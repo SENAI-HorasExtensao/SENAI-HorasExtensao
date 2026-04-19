@@ -4,37 +4,37 @@ services:
     container_name: mysql_db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: SENAI_HORAS_EXTENSAO
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: root_db
       MYSQL_PASSWORD: root
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-    networks:
-      - app_network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
-      retries: 10
-      start_period: 5s
-  
+      retries: 5
+
   python_api:
     build: ./python_api
     container_name: python_api
     ports:
       - "8000:8000"
-    environment:
-      - DATABASE_URL=mysql+pymysql://root_db:root@mysql_db:3306/SENAI_HORAS_EXTENSAO
     volumes:
       - ./python_api:/app
+    environment:
+      - DB_HOST=mysql_db
+      - DB_PORT=3306
+      - DB_USER=root_db
+      - DB_PASSWORD=root
+      - DB_NAME=SENAI_HORAS_EXTENSAO
+      - PYTHONPATH=/app:/app/app
     depends_on:
       mysql_db:
         condition: service_healthy
-    networks:
-      - app_network
 
 volumes:
   mysql_data:

@@ -6,3 +6,4 @@ pydantic-settings
 python-multipart
 pymysql
 cryptography
+mysql-connector-python
