@@ -29,14 +29,7 @@ create table turma(
     nome varchar(50) not null
 );
 
-create table tipo_usuario(
-	id integer unsigned primary key auto_increment not null,
-	valor varchar(100) not null
-);
-
 # Conteúdo geral do usuário
-# Não deve possuir tipo de usuário nesta tabela
-# Cada tipo de usuário deve ter sua própria tabela e referenciar esta
 create table usuario(
 	#identificação em uuid pela quantidade de pessoas possíveis a longo prazo
 	id char(36) primary key default (UUID()),
@@ -67,20 +60,13 @@ create table projeto(
     horas_previstas int unsigned null
 );
 
-# Permite determinar como as horas serão registradas no sistema.
-# Atrelada às horas dos alunos
-create table status_horas(
-	id integer unsigned primary key auto_increment not null,
-	valor varchar(100) not null
-);
-
 # Solicitação de horas
 create table solicitacao_horas_aluno(
 	id char(36) primary key default (UUID()),
     id_projeto char(36) not null,
     	foreign key (id_projeto) references projeto(id),
         
-    status ENUM('Pendente', 'Validade', 'Negado') NOT NULL,
+    status ENUM('Pendente', 'Validado', 'Negado') NOT NULL,
         
     id_aluno char(36) not null,
 		foreign key (id_aluno) references usuario(id),
