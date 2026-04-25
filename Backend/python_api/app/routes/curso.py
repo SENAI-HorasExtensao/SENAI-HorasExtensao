@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from schemas.curso import CursoCreate, CursoUpdate
-from services import curso_services
+from app.schemas.curso import CursoCreate, CursoUpdate
+from app.services import curso_services
 
 router = APIRouter(prefix="/curso", tags=["Curso"])
 
