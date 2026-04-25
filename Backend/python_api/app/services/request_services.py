@@ -1,1 +1,0 @@
-# funcoes de pedido e coisas assim

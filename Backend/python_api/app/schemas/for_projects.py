@@ -3,16 +3,16 @@ from typing import Optional
 
 class ProjetoBase(BaseModel):
     titulo: str
-    descricao: str 
-    horas_previstas: int 
-    id_curso: int
+    descricao: str
+    horas_previstas: int
+    id_curso: str  
 
 class ProjetoCreate(ProjetoBase):
-    pass 
+    pass  
 
 class ProjetoRead(ProjetoBase):
-    id_projeto: int
-    id_docente: int
+    id: str        
+    id_docente: str 
 
     class Config:
-        from_attributes = True
+        from_attributes = True 

@@ -1,24 +1,13 @@
-from sqlalchemy import ForeignKey, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import Column, String, Integer, ForeignKey, Text
 from app.database.connection import Base 
+import uuid
 
 class Projeto(Base):
-    __tablename__ = "projeto" 
+    __tablename__ = "projeto"
 
-    id_projeto: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    titulo: Mapped[str] = mapped_column(String(100), nullable=False)
-    descricao: Mapped[str] = mapped_column(String(255), nullable=True) 
-    horas_previstas: Mapped[int] = mapped_column(nullable=False)
-    id_docente: Mapped[int] = mapped_column(ForeignKey("docente.id_docente"), nullable=False)
-    id_curso: Mapped[int] = mapped_column(ForeignKey("curso.id_curso"), nullable=False)
-
-# Tabelas de apoio - PARA TESTE
-class Curso(Base):
-    __tablename__ = "curso"
-    id_curso: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    nome: Mapped[str] = mapped_column(String(100), nullable=False) 
-
-class Docente(Base):
-    __tablename__ = "docente"
-    id_docente: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    nome: Mapped[str] = mapped_column(String(100), nullable=False) # Adicionado String(100)
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id_docente = Column(String(36), ForeignKey("usuario.id"), nullable=False)
+    id_curso = Column(String(36), ForeignKey("curso.id"), nullable=False)
+    titulo = Column(String(255), nullable=False)
+    descricao = Column(Text, nullable=False)
+    horas_previstas = Column(Integer, nullable=True)

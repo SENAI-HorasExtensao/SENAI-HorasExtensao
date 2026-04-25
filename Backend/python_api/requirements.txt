@@ -1,6 +1,9 @@
 fastapi
-uvicorn[standard]
+uvicorn
 sqlalchemy
+pydantic
+pydantic-settings
+python-multipart
 pymysql
 cryptography
-python-multipart
+mysql-connector-python
