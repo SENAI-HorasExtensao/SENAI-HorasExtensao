@@ -23,7 +23,6 @@ class ProjetoDelete(BaseModel):
     id: str
 
 class ProjetoUpdate(BaseModel):
-    id: str
     id_docente: Optional[str] = None
     id_curso: Optional[str] = None        
     titulo: Optional[str] = None

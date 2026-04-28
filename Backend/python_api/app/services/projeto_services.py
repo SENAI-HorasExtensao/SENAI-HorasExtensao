@@ -1,7 +1,7 @@
 from app.database.connection import get_db_connection
 from fastapi import HTTPException, status
 from typing import List, Optional, Dict, Any
-from app.schemas.for_projects import ProjetoCreate, ProjetoUpdate, ProjetoDelete
+from app.schemas.for_projecto import ProjetoCreate, ProjetoUpdate, ProjetoDelete
 
 def listar_projetos(id_curso: Optional[str] = None) -> List[Dict[str, Any]]:
     db = get_db_connection()
@@ -10,7 +10,13 @@ def listar_projetos(id_curso: Optional[str] = None) -> List[Dict[str, Any]]:
         if id_curso is not None:
             cursor.execute("SELECT * FROM projeto WHERE id_curso = %s", (id_curso,))
         result = cursor.fetchall()
+
+        if not result:
+            raise Exception("Nenhum projeto encontrado para este curso")
+
         return result
+    except Exception as e:
+        raise Exception("Este projeto não se encontra neste curso")
     finally:
         cursor.close()
         db.close()
@@ -21,7 +27,12 @@ def listar_projeto_por_id(id: str):
     try:
         if id is not None:
             cursor.execute("SELECT * FROM projeto WHERE id = %s", (id,))
-        return cursor.fetchone()
+        
+            resultado = cursor.fetchone()
+            if resultado is None:
+                raise Exception("Projeto não encontrado")
+            
+            return resultado
     except Exception as e:
         raise Exception("O projeto não foi encontrado")
     finally:
@@ -45,11 +56,11 @@ def cadastrar_projeto(dados: ProjetoCreate) -> Dict[str, str]:
         cursor.close()
         db.close()
 
-def excluir_projeto(dados: ProjetoDelete) -> Dict[str, str]:
+def excluir_projeto(id: str) -> Dict[str, str]:
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
     try:
-        cursor.execute("DELETE FROM projeto WHERE id = %s", (dados.id,))
+        cursor.execute("DELETE FROM projeto WHERE id = %s", (id,))
         db.commit()
         return {"message": "Projeto excluído com sucesso."}
     except Exception as e:
@@ -58,15 +69,15 @@ def excluir_projeto(dados: ProjetoDelete) -> Dict[str, str]:
         cursor.close()
         db.close()
 
-def editar_projeto(dados: ProjetoUpdate) -> Optional[Dict[str, str]]:
+def editar_projeto(id: str, dados: ProjetoUpdate) -> Optional[Dict[str, str]]:
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
     try:
-        cursor.execute("SELECT * FROM projeto WHERE id = %s", (dados.id,))
+        cursor.execute("SELECT * FROM projeto WHERE id = %s", (id,))
         projeto_atual = cursor.fetchone()
         
         if not projeto_atual:
-            return None
+            raise Exception("Projeto não encontrado")
 
         novo_titulo = dados.titulo or projeto_atual["titulo"]
         nova_descricao = dados.descricao or projeto_atual["descricao"]
@@ -77,13 +88,13 @@ def editar_projeto(dados: ProjetoUpdate) -> Optional[Dict[str, str]]:
             UPDATE projeto 
             SET titulo=%s, descricao=%s, horas_previstas=%s, id_curso=%s
             WHERE id = %s
-        """, (novo_titulo, nova_descricao, novas_horas, novo_curso, dados.id))
+        """, (novo_titulo, nova_descricao, novas_horas, novo_curso, id))
         
         db.commit()
         return {"message": "Projeto atualizado com sucesso"}
     except Exception as e:
         db.rollback()
-        raise Exception(f"Erro ao atualizar: {str(e)}")
+        raise Exception("Erro ao editar o projeto")
     finally:
         cursor.close()
         db.close()
