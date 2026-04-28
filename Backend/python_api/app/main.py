@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routes import auth, admin, aluno, docente, solicitacao_horas
+from routes import auth, admin, aluno, docente, solicitacao_horas_update
 
 app = FastAPI(title="SENAI Horas Extensão")
 
@@ -8,7 +8,7 @@ app.include_router(auth.router)
 app.include_router(admin.router)
 app.include_router(aluno.router)
 app.include_router(docente.router)
-app.include_router(solicitacao_horas.router)
+app.include_router(solicitacao_horas_update.router)
 
 @app.get("/")
 def home():
