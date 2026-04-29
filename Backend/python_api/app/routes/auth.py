@@ -12,8 +12,8 @@ def login(dados: LoginSchema):
     cursor = db.cursor(dictionary=True)
     try:
         # Busca por CPF 
-        cursor.execute("SELECT * FROM usuario WHERE cpf = %s", (dados.cpf,))
-        user = cursor.fetchone()
+        query = "SELECT id_usuario, cpf, senha_hash, tipo_perfil FROM usuario WHERE cpf = %s"
+        cursor.execute(query, (dados.cpf,))
         
         if not user or not verificar_senha(dados.senha, user['senha_hash']):
             raise HTTPException(status_code=401, detail="CPF ou Senha incorretos")
