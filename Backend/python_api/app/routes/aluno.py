@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from database.connection import get_db_connection
+from app.database.connection import get_db_connection
 
 router = APIRouter(prefix="/aluno", tags=["Aluno"])
 
